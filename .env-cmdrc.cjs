@@ -9,7 +9,8 @@ module.exports = new Promise((resolve) => {
   resolve({
     development: {
       NODE_ENV: "development",
-      GOOGLE_APPLICATION_CREDENTIALS: "./service-account.json",
+      BUCKET: "tmp-30",
+      TEMPOFILE: 'index.js'
     },
     test: { NODE_ENV: "test" },
     production: {

@@ -4,12 +4,18 @@
   "main": "index.js",
   "license": "MIT",
   "private": true,
+  "type": "module",
   "scripts": {
-    "start": "env-cmd --rc-file .env-cmdrc.js -e development node --no-warnings index.js",
-    "start-prod": "env-cmd --rc-file .env-cmdrc.js -e production node --no-warnings index.js"
+    "fix": "yarn dlx standard --fix && yarn dlx prettier --write . ",
+    "start": "env-cmd --rc-file .env-cmdrc.cjs -e development node --no-warnings index.js",
+    "start-prod": "env-cmd --rc-file .env-cmdrc.cjs -e production node --no-warnings index.js"
   },
   "dependencies": {
     "@google-cloud/storage": "^5.8.0",
     "env-cmd": "^10.1.0"
+  },
+  "devDependencies": {
+    "env-cmd": "https://github.com/toddbluhm/env-cmd.git",
+    "prettier-config-standard": "^1.0.1"
   }
 }

@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  adminer:
+    image: adminer
+    restart: always
+    volumes:
+      - ./docker/adminer/plugins-enabled:/var/www/html/plugins-enabled
+    ports:
+      - 8101:8080
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    ports:
+      - '1433:1433'
+    environment:
+      SA_PASSWORD: 'cPassword1'
+      ACCEPT_EULA: 'Y'
+      MSSQL_COLLATION: 'SQL_Ukrainian_CP1251_CI_AS'
+
+  main:
+    build: .
+    tty: true
+    volumes:
+      - ./:/app
+    # environment:
+    #   HAS: pos
