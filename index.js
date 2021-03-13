@@ -6,29 +6,41 @@ import { exec } from 'child_process'
 import checkEnvLib from '@47ng/check-env'
 import { Storage } from '@google-cloud/storage'
 
-checkEnvLib.default({ required: ['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS'] })
+checkEnvLib.default({
+  required: ['DB_HOST', 'DB_NAME', 'DUMP_PATH', 'BUCKET']
+})
+
+const {
+  DB_HOST: dbHost,
+  DB_NAME: dbName,
+  DB_USER: dbUser,
+  DB_PASS: dbPass,
+  DUMP_PATH: dumpPath,
+  BUCKET: bucket
+} = process.env
 
 // Imports the Google Cloud client library
 const storage = new Storage()
 
 ;(async () => {
   try {
-    const file = `${process.env.DB_NAME}-${new Date()
+    const file = `${dumpPath}${dbName}-${new Date()
       .toISOString()
       .replace(/\D/g, '-')
       .slice(0, -5)}.bak`
     console.log('file: ', file)
 
     const result = await execPromise(
-      `sqlcmd -S ${process.env.DB_HOST} -U ${process.env.DB_USER} -P ${process.env.DB_PASS} -Q "BACKUP DATABASE ${process.env.DB_NAME} TO DISK='./${file}'"`
+      `sqlcmd -S ${dbHost} ${dbUser ? '-U ' + dbUser : ''} ${
+        dbPass ? '-P ' + dbPass : ''
+      }  -Q "BACKUP DATABASE ${dbName} TO DISK='${file}'"`
     )
     console.log('stdout: ', result)
 
     await gzip(file)
     console.log('gziped')
 
-    await storage.bucket(process.env.BUCKET).upload(`${file}.gz`, {})
-
+    await storage.bucket(bucket).upload(`${file}.gz`, {})
     console.log(`copied to bucket`)
   } catch (e) {
     console.error(e)
