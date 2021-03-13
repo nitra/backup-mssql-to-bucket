@@ -1,10 +1,11 @@
 {
-  "name": "backup-db-to-bucket",
+  "name": "backup-mssql-to-bucket",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "private": true,
   "type": "module",
+  "bin": "index.js",
   "scripts": {
     "fix": "yarn dlx standard --fix && yarn dlx prettier --write . ",
     "start": "env-cmd --rc-file .env-cmdrc.cjs -e development node index.js",

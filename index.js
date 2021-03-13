@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import fs from 'fs'
 import zlib from 'zlib'
 import { exec } from 'child_process'
@@ -54,6 +56,7 @@ async function execPromise(command) {
   return new Promise(function (resolve, reject) {
     exec(command, (error, stdout, stderr) => {
       if (error) {
+        console.error(stderr)
         return reject(error)
       }
 
