@@ -19,6 +19,8 @@ const {
   BUCKET: bucket
 } = process.env
 
+const { unlink } = fs.promises
+
 // Imports the Google Cloud client library
 const storage = new Storage()
 
@@ -42,6 +44,12 @@ const storage = new Storage()
 
     await storage.bucket(bucket).upload(`${file}.gz`, {})
     console.log(`copied to bucket`)
+
+    const deleteBak = unlink(file)
+    const deleteBakGz = unlink(`${file}.gz`)
+
+    await Promise.all([deleteBak, deleteBakGz])
+    console.log(`local files deleted`)
   } catch (e) {
     console.error(e)
   }
