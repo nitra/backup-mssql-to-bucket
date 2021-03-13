@@ -35,7 +35,7 @@ const storage = new Storage()
     const result = await execPromise(
       `sqlcmd -S ${dbHost} ${dbUser ? '-U ' + dbUser : ''} ${
         dbPass ? '-P ' + dbPass : ''
-      }  -Q "BACKUP DATABASE ${dbName} TO DISK='${file}'"`
+      }  -Q "BACKUP DATABASE '${dbName}' TO DISK='${file}'"`
     )
     console.log('stdout: ', result)
 
