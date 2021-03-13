@@ -5,6 +5,13 @@ __metadata:
   version: 4
   cacheKey: 7
 
+"@47ng/check-env@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@47ng/check-env@npm:2.0.2"
+  checksum: c0becfa537e39ba5b57a07825ed94b69bfc4b9bc50aa536acc0799c6f5a29eb7d0689ca69e9839cf1885f3a3d3cf6afd9195872297e6a92abf2d50de46d707e6
+  languageName: node
+  linkType: hard
+
 "@google-cloud/common@npm:^3.6.0":
   version: 3.6.0
   resolution: "@google-cloud/common@npm:3.6.0"
@@ -120,6 +127,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backup-db-to-bucket@workspace:."
   dependencies:
+    "@47ng/check-env": ^2.0.2
     "@google-cloud/storage": ^5.8.0
     env-cmd: "https://github.com/toddbluhm/env-cmd.git"
     prettier-config-standard: ^1.0.1

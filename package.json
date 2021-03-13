@@ -7,10 +7,11 @@
   "type": "module",
   "scripts": {
     "fix": "yarn dlx standard --fix && yarn dlx prettier --write . ",
-    "start": "env-cmd --rc-file .env-cmdrc.cjs -e development node --no-warnings index.js",
-    "start-prod": "env-cmd --rc-file .env-cmdrc.cjs -e production node --no-warnings index.js"
+    "start": "env-cmd --rc-file .env-cmdrc.cjs -e development node index.js",
+    "start-prod": "env-cmd --rc-file .env-cmdrc.cjs -e production node index.js"
   },
   "dependencies": {
+    "@47ng/check-env": "^2.0.2",
     "@google-cloud/storage": "^5.8.0",
     "env-cmd": "^10.1.0"
   },
