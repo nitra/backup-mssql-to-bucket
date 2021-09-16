@@ -16,6 +16,11 @@ const {
   DB_USER: dbUser,
   DB_PASS: dbPass,
   DUMP_PATH: dumpPath,
+  DB_HOST_DEST: dbHost_dest,
+  DB_NAME_DEST: dbName_dest,
+  DB_USER_DEST: dbUser_dest,
+  DB_PASS_DEST: dbPass_dest,
+  DUMP_PATH_DEST: dumpPath_dest,
   BUCKET: bucket
 } = process.env
 
@@ -44,7 +49,43 @@ const storage = new Storage()
 
     await storage.bucket(bucket).upload(`${file}.gz`, {})
     console.log(`copied to bucket`)
+/////////////////////////////////начало творчества/////////////////////////////////////////////////////////
+    const resultcopy = await execPromise(
+      `scp ${file}.gz ${dbUser_dest}@${dbHost_dest}:${dumpPath_dest}`
+    )
+    console.log(resultcopy)
+    
+    // разархивировать
+    const resultarch = await execPromise(
+      `
+      ssh ${dbUser_dest}@${dbHost_dest} &&
+      gunzip ${dumpPath_dest}${file}.gz ${dumpPath_dest}${dbName_dest} &&
+      exit`
+    )
+    console.log(resultarch)
+    
+    // дропнуть старую базу
+    const resultdrop = await execPromise(
+      `sqlcmd -E -S ${dbHost_dest} ${dbUser_dest ? '-U ' + dbUser_dest : ''} ${dbPass_dest ? '-P ' + dbPass_dest : ''} -Q "DROP DATABASE [${dbName_dest}]"`
+    )
+    console.log(resultdrop)
+      
+    // развернуть скопированную
+    const resultrest = await execPromise(
+      `sqlcmd -E -S ${dbHost_dest} ${dbUser_dest ? '-U ' + dbUser_dest : ''} ${dbPass_dest ? '-P ' + dbPass_dest : ''} -Q "RESTORE DATABASE [${dbName_dest}] FROM DISK='${dumpPath_dest}${dbName_dest}'  WITH NORECOVERY"`
+    )
+    console.log(resultrest)
 
+    // удалить бекап
+    const resultdel = await execPromise(
+      `
+      ssh ${dbUser_dest}@${dbHost_dest}
+      rm ${dumpPath_dest}${dbName_dest}
+      exit`
+    )
+    console.log(resultdel)    
+///////////////////////////////////конец/////////////////////////////////////////////////////////////
+  
     const deleteBak = unlink(file)
     const deleteBakGz = unlink(`${file}.gz`)
 
